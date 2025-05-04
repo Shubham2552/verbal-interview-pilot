@@ -13,6 +13,8 @@ interface InterviewCardProps {
   duration?: string;
   status: "completed" | "scheduled" | "in-progress";
   score?: number;
+  topic?: string;
+  level?: string;
 }
 
 const InterviewCard = ({
@@ -22,7 +24,9 @@ const InterviewCard = ({
   date,
   duration,
   status,
-  score
+  score,
+  topic = "general",
+  level = "beginner"
 }: InterviewCardProps) => {
   return (
     <Card className="h-full">
@@ -34,6 +38,16 @@ const InterviewCard = ({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
+        {topic && topic !== "general" && (
+          <Badge variant="outline" className="mb-2 bg-primary/10 text-primary border-primary/20">
+            {topic.charAt(0).toUpperCase() + topic.slice(1)}
+          </Badge>
+        )}
+        {level && (
+          <Badge variant="outline" className="ml-2 mb-2 bg-secondary/10 text-secondary border-secondary/20">
+            {level.charAt(0).toUpperCase() + level.slice(1)}
+          </Badge>
+        )}
         {date && (
           <div className="flex items-center text-sm mb-2">
             <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
@@ -68,12 +82,12 @@ const InterviewCard = ({
           </Link>
         )}
         {status === "scheduled" && (
-          <Link to={`/interview/${id}`} className="w-full">
+          <Link to={`/interview/${id}?topic=${topic}&level=${level}`} className="w-full">
             <Button className="w-full">Start Interview</Button>
           </Link>
         )}
         {status === "in-progress" && (
-          <Link to={`/interview/${id}`} className="w-full">
+          <Link to={`/interview/${id}?topic=${topic}&level=${level}`} className="w-full">
             <Button className="w-full">Continue Interview</Button>
           </Link>
         )}

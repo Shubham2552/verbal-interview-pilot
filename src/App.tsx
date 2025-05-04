@@ -14,6 +14,7 @@ import Results from "./pages/Results";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import NewInterview from "./pages/NewInterview";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,11 @@ const App = () => (
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/new-interview" element={
+              <ProtectedRoute>
+                <NewInterview />
               </ProtectedRoute>
             } />
             <Route path="/interview/:id" element={
