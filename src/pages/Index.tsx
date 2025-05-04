@@ -4,8 +4,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { ArrowRight, Check, Mic } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
+  const { isAuthenticated } = useAuth();
+  
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -23,17 +26,35 @@ const Index = () => {
                 analyzes your responses, and provides actionable feedback in real-time.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Link to="/interview/start">
-                  <Button size="lg" className="px-8">
-                    Start Practicing
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link to="/dashboard">
-                  <Button size="lg" variant="outline" className="px-8">
-                    View Dashboard
-                  </Button>
-                </Link>
+                {isAuthenticated ? (
+                  <Link to="/interview/start">
+                    <Button size="lg" className="px-8">
+                      Start Practicing
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link to="/signup">
+                    <Button size="lg" className="px-8">
+                      Sign Up Free
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                )}
+                
+                {isAuthenticated ? (
+                  <Link to="/dashboard">
+                    <Button size="lg" variant="outline" className="px-8">
+                      View Dashboard
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link to="/login">
+                    <Button size="lg" variant="outline" className="px-8">
+                      Login
+                    </Button>
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -169,11 +190,19 @@ const Index = () => {
               <p className="text-xl text-muted-foreground mb-8">
                 Start practicing today and build confidence for your upcoming interviews.
               </p>
-              <Link to="/interview/start">
-                <Button size="lg" className="px-8">
-                  Begin Free Practice
-                </Button>
-              </Link>
+              {isAuthenticated ? (
+                <Link to="/interview/start">
+                  <Button size="lg" className="px-8">
+                    Begin Practice
+                  </Button>
+                </Link>
+              ) : (
+                <Link to="/signup">
+                  <Button size="lg" className="px-8">
+                    Create Free Account
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </section>
