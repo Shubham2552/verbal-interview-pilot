@@ -51,10 +51,10 @@ const Header = () => {
         <div className="flex items-center space-x-4">
           {isAuthenticated ? (
             <>
-              <Link to="/dashboard">
+              <Link to="/profile">
                 <Button variant="outline" size="sm" className="hidden md:flex">
                   <User className="h-4 w-4 mr-2" />
-                  My Account
+                  My Profile
                 </Button>
               </Link>
               <Link to="/interview/start">
@@ -127,11 +127,11 @@ const Header = () => {
                   About
                 </Link>
                 <Link 
-                  to="/dashboard" 
+                  to="/profile" 
                   className="text-foreground hover:text-primary transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  My Account
+                  My Profile
                 </Link>
                 <Link 
                   to="/interview/start"

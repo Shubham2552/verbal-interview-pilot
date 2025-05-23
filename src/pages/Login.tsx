@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Mic } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,9 +27,8 @@ const Login = () => {
       setIsLoading(false);
       // Simple validation
       if (email && password) {
-        // Store authentication state in localStorage
-        localStorage.setItem("isAuthenticated", "true");
-        localStorage.setItem("userEmail", email);
+        // Login using auth context
+        login(email);
         
         toast({
           title: "Login successful",
@@ -80,9 +81,9 @@ const Login = () => {
               <div>
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
-                  <a href="#" className="text-sm font-medium text-primary hover:underline">
+                  <Link to="/forgot-password" className="text-sm font-medium text-primary hover:underline">
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
                 <Input
                   id="password"
