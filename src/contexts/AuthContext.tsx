@@ -4,7 +4,8 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 interface AuthContextType {
   isAuthenticated: boolean;
   userEmail: string | null;
-  login: (email: string) => void;
+  token: string | null;
+  login: (email: string, token: string) => void;
   logout: () => void;
 }
 
@@ -13,6 +14,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null); 
 
   useEffect(() => {
     // Check if the user is already authenticated on mount
@@ -25,11 +27,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = (email: string) => {
+  const login = (email: string, token: string) => {
     localStorage.setItem("isAuthenticated", "true");
     localStorage.setItem("userEmail", email);
+    localStorage.setItem("token", token);
     setIsAuthenticated(true);
     setUserEmail(email);
+    setToken(token);
   };
 
   const logout = () => {
@@ -40,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userEmail, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, token, userEmail, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

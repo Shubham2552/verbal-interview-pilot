@@ -17,13 +17,14 @@ import Signup from "./pages/Signup";
 import NewInterview from "./pages/NewInterview";
 import ForgotPassword from "./pages/ForgotPassword";
 import Profile from "./pages/Profile";
-
+import { Provider } from "react-redux";
+import { store } from "./store/index";
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <AuthProvider>
+      <Provider store={store}>
         <Toaster />
         <Sonner />
         <BrowserRouter>
@@ -60,7 +61,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
-      </AuthProvider>
+      </Provider>
     </TooltipProvider>
   </QueryClientProvider>
 );

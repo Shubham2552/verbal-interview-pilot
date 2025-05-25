@@ -3,18 +3,23 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Mic, User, Menu, LogOut } from "lucide-react";
 import { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { logout } from "@/store/AuthSlice";
+import type { RootState } from "@/store"; // Adjust path if needed
+import { useDispatch, useSelector } from "react-redux";
+
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const navigate = useNavigate();
   const { toast } = useToast();
 
+
   const handleLogout = () => {
-    logout();
+    dispatch(logout());
     toast({
       title: "Logged out",
       description: "You have been logged out successfully.",
@@ -22,6 +27,7 @@ const Header = () => {
     navigate("/");
     setIsMobileMenuOpen(false);
   };
+
 
   return (
     <header className="border-b bg-white shadow-sm sticky top-0 z-50">
@@ -62,9 +68,9 @@ const Header = () => {
                   Start Interview
                 </Button>
               </Link>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="hidden md:flex"
                 onClick={handleLogout}
               >
@@ -86,10 +92,10 @@ const Header = () => {
               </Link>
             </>
           )}
-          
+
           {/* Mobile menu button */}
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             size="sm"
             className="md:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -103,8 +109,8 @@ const Header = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden border-t p-4 bg-white">
           <nav className="flex flex-col space-y-4">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="text-foreground hover:text-primary transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
@@ -112,28 +118,28 @@ const Header = () => {
             </Link>
             {isAuthenticated ? (
               <>
-                <Link 
-                  to="/dashboard" 
+                <Link
+                  to="/dashboard"
                   className="text-foreground hover:text-primary transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Dashboard
                 </Link>
-                <Link 
-                  to="/" 
+                <Link
+                  to="/"
                   className="text-foreground hover:text-primary transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   About
                 </Link>
-                <Link 
-                  to="/profile" 
+                <Link
+                  to="/profile"
                   className="text-foreground hover:text-primary transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   My Profile
                 </Link>
-                <Link 
+                <Link
                   to="/interview/start"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -141,8 +147,8 @@ const Header = () => {
                     Start Interview
                   </Button>
                 </Link>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full"
                   onClick={handleLogout}
                 >
@@ -152,14 +158,14 @@ const Header = () => {
               </>
             ) : (
               <>
-                <Link 
-                  to="/" 
+                <Link
+                  to="/"
                   className="text-foreground hover:text-primary transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   About
                 </Link>
-                <Link 
+                <Link
                   to="/login"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -167,7 +173,7 @@ const Header = () => {
                     Login
                   </Button>
                 </Link>
-                <Link 
+                <Link
                   to="/signup"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >

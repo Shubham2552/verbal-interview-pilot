@@ -8,49 +8,77 @@ import { useToast } from "@/components/ui/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Mic } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { login } from "@/store/authSlice"; // <-- Import your Redux login action
+import { apiCall } from "../api/apiCalls"; // Adjust the import based on your project structure
 
 const Signup = () => {
-  const [name, setName] = useState("");
+  const [firstname, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
+  const [gender, setGender] = useState("");
+  const [dateofbirth, setDateOfBirth] = useState("");
+  const [phone, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const dispatch = useDispatch(); // <-- Use Redux dispatch
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Mock authentication - in a real app this would connect to an auth backend
-    setTimeout(() => {
-      setIsLoading(false);
-      // Simple validation
-      if (name && email && password) {
-        // Store authentication state in localStorage
-        localStorage.setItem("isAuthenticated", "true");
-        localStorage.setItem("userEmail", email);
-        localStorage.setItem("userName", name);
-        
-        toast({
-          title: "Account created",
-          description: "Welcome to VerbalPilot!",
-        });
-        
-        navigate("/dashboard");
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Signup failed",
-          description: "Please fill in all fields and try again.",
-        });
+    try {
+      // Call your signup API endpoint
+      const signUpResponse = await apiCall({
+        method: "POST",
+        path: "/user/signup", // Change this to your actual signup endpoint
+        body: {
+          firstname,
+          lastname,
+          gender,
+          dateofbirth,
+          phone,
+          email,
+          password,
+        },
+      });
+   dispatch(login({
+        token: signUpResponse.data.token,
+        user: {
+          email
+        }
+      }));
+      toast({
+        title: "Account created",
+        description: "Welcome to VerbalPilot!",
+      });
+
+      navigate("/dashboard");
+    } catch (error: any) {
+      console.error(error);
+      let description = "Please fill in all fields and try again.";
+      const message = error?.response?.data?.message;
+      if (Array.isArray(message)) {
+        description = message.join(", ");
+      } else if (typeof message === "string") {
+        description = message;
       }
-    }, 1000);
+      toast({
+        variant: "destructive",
+        title: "Signup failed",
+        description,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      
+
       <main className="flex-grow flex items-center justify-center bg-gradient-to-b from-primary/10 to-background py-12">
         <div className="w-full max-w-md space-y-8 p-8 bg-white rounded-lg shadow-sm">
           <div className="text-center">
@@ -64,21 +92,90 @@ const Signup = () => {
               Sign up to start practicing for your interviews
             </p>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name">First Name</Label>
                 <Input
-                  id="name"
+                  id="firstName"
                   type="text"
-                  placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  placeholder="E.g. John"
+                  value={firstname}
+                  onChange={(e) => setFirstName(e.target.value)}
                   required
                 />
               </div>
-              
+              <div>
+                <Label htmlFor="name">Last Name</Label>
+                <Input
+                  id="lastName"
+                  type="text"
+                  placeholder="E.g. Doe"
+                  value={lastname}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="name">Phone Number</Label>
+                <Input
+                  id="phoneNumber"
+                  type="phone"
+                  placeholder="E.g. 9999999999"
+                  value={phone}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                <Input
+                  id="dateOfBirth"
+                  type="date"
+                  value={dateofbirth}
+                  onChange={(e) => setDateOfBirth(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label>Gender</Label>
+                <div className="flex gap-4 mt-2">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="male"
+                      checked={gender === "male"}
+                      onChange={() => setGender("male")}
+                      required
+                    />
+                    Male
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="female"
+                      checked={gender === "female"}
+                      onChange={() => setGender("female")}
+                      required
+                    />
+                    Female
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="other"
+                      checked={gender === "other"}
+                      onChange={() => setGender("other")}
+                      required
+                    />
+                    Other
+                  </label>
+                </div>
+              </div>
               <div>
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -90,7 +187,7 @@ const Signup = () => {
                   required
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="password">Password</Label>
                 <Input
@@ -110,7 +207,7 @@ const Signup = () => {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Creating account..." : "Create account"}
             </Button>
-            
+
             <div className="text-center text-sm">
               <p className="text-muted-foreground">
                 Already have an account?{" "}
@@ -122,7 +219,7 @@ const Signup = () => {
           </form>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

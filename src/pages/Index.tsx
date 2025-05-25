@@ -1,14 +1,14 @@
-
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { ArrowRight, Check, Mic } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
 
 const Index = () => {
-  const { isAuthenticated } = useAuth();
-  
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />

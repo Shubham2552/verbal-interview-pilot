@@ -8,48 +8,64 @@ import { useToast } from "@/components/ui/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Mic } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useDispatch } from "react-redux";
+import { login } from "@/store/authSlice";
+import { apiCall } from "@/api/apiCalls";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { login } = useAuth();
+  const { toast } = useToast();;
+  const dispatch = useDispatch();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    try {
+      const loginResponse = await apiCall({
+        method: "POST",
+        path: "/user/login",
+        body: { email, password },
+      });
+      dispatch(login({
+        token: loginResponse.data.token,
+        user: {
+          email
+        }
+      })); toast({
+        title: "Login successful",
+        description: "Welcome back to VerbalPilot!",
+      });
 
-    // Mock authentication - in a real app this would connect to an auth backend
-    setTimeout(() => {
-      setIsLoading(false);
-      // Simple validation
-      if (email && password) {
-        // Login using auth context
-        login(email);
-        
-        toast({
-          title: "Login successful",
-          description: "Welcome back to VerbalPilot!",
-        });
-        
-        navigate("/dashboard");
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Login failed",
-          description: "Please check your credentials and try again.",
-        });
+      navigate("/dashboard");
+    } catch (error: any) {
+      console.error(error);
+      let description = "Please check your credentials and try again.";
+      const message = error?.response?.data?.message;
+      if (Array.isArray(message)) {
+        description = message.join(", ");
+      } else if (typeof message === "string") {
+        description = message;
       }
-    }, 1000);
+
+      toast({
+        variant: "destructive",
+        title: "Login failed",
+        description,
+      });
+    } finally {
+      setIsLoading(false);
+
+    }
+
   };
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      
+
       <main className="flex-grow flex items-center justify-center bg-gradient-to-b from-primary/10 to-background py-12">
         <div className="w-full max-w-md space-y-8 p-8 bg-white rounded-lg shadow-sm">
           <div className="text-center">
@@ -63,7 +79,7 @@ const Login = () => {
               Sign in to continue your interview practice
             </p>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
             <div className="space-y-4">
               <div>
@@ -77,7 +93,7 @@ const Login = () => {
                   required
                 />
               </div>
-              
+
               <div>
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
@@ -99,7 +115,7 @@ const Login = () => {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
-            
+
             <div className="text-center text-sm">
               <p className="text-muted-foreground">
                 Don't have an account?{" "}
@@ -111,7 +127,7 @@ const Login = () => {
           </form>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );
