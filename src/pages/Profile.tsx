@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Mail, Lock } from "lucide-react";
+import { User, Mail, Lock, Shield, ShieldCheck } from "lucide-react";
 
 const Profile = () => {
   const { userEmail, login } = useAuth();
@@ -19,6 +19,12 @@ const Profile = () => {
   const [email, setEmail] = useState(userEmail || "");
   const [isEditing, setIsEditing] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  
+  // Email verification states
+  const [isEmailVerified, setIsEmailVerified] = useState(localStorage.getItem("emailVerified") === "true");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isResending, setIsResending] = useState(false);
 
   const handleUpdateProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +43,47 @@ const Profile = () => {
       toast({
         title: "Profile updated",
         description: "Your profile information has been updated successfully.",
+      });
+    }, 1000);
+  };
+
+  const handleVerifyEmail = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsVerifying(true);
+
+    // Mock email verification - in a real app this would connect to a backend
+    setTimeout(() => {
+      setIsVerifying(false);
+      
+      if (verificationCode === "123456") {
+        setIsEmailVerified(true);
+        localStorage.setItem("emailVerified", "true");
+        setVerificationCode("");
+        
+        toast({
+          title: "Email verified",
+          description: "Your email has been successfully verified.",
+        });
+      } else {
+        toast({
+          title: "Invalid code",
+          description: "The verification code is incorrect. Please try again.",
+          variant: "destructive"
+        });
+      }
+    }, 1500);
+  };
+
+  const handleResendCode = () => {
+    setIsResending(true);
+
+    // Mock resend verification code - in a real app this would connect to a backend
+    setTimeout(() => {
+      setIsResending(false);
+      
+      toast({
+        title: "Verification code sent",
+        description: "A new verification code has been sent to your email.",
       });
     }, 1000);
   };
@@ -72,6 +119,19 @@ const Profile = () => {
                 </Avatar>
                 <h3 className="text-xl font-semibold">{name}</h3>
                 <p className="text-muted-foreground">{email}</p>
+                <div className="flex items-center gap-2 mt-2">
+                  {isEmailVerified ? (
+                    <div className="flex items-center gap-1 text-green-600">
+                      <ShieldCheck className="h-4 w-4" />
+                      <span className="text-sm font-medium">Verified</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1 text-amber-600">
+                      <Shield className="h-4 w-4" />
+                      <span className="text-sm font-medium">Not Verified</span>
+                    </div>
+                  )}
+                </div>
                 <p className="text-sm mt-2 font-medium text-primary">Free Plan</p>
               </CardContent>
               <CardFooter>
@@ -138,10 +198,21 @@ const Profile = () => {
                     
                     <div className="flex items-center gap-2 p-3 border rounded-md">
                       <Mail className="h-5 w-5 text-muted-foreground" />
-                      <div>
+                      <div className="flex-grow">
                         <p className="text-sm font-medium">Email</p>
                         <p className="text-foreground">{email}</p>
                       </div>
+                      {isEmailVerified ? (
+                        <div className="flex items-center gap-1 text-green-600">
+                          <ShieldCheck className="h-4 w-4" />
+                          <span className="text-xs">Verified</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1 text-amber-600">
+                          <Shield className="h-4 w-4" />
+                          <span className="text-xs">Not Verified</span>
+                        </div>
+                      )}
                     </div>
                     
                     <div className="flex items-center gap-2 p-3 border rounded-md">
@@ -161,6 +232,54 @@ const Profile = () => {
                 )}
               </CardContent>
             </Card>
+
+            {/* Email Verification Card */}
+            {!isEmailVerified && (
+              <Card className="col-span-1 md:col-span-3">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="h-5 w-5 text-amber-600" />
+                    Verify Your Email
+                  </CardTitle>
+                  <CardDescription>
+                    Please verify your email address to secure your account and access all features.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleVerifyEmail} className="space-y-4">
+                    <div>
+                      <Label htmlFor="verificationCode">Verification Code</Label>
+                      <Input
+                        id="verificationCode"
+                        type="text"
+                        placeholder="Enter 6-digit code"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
+                        maxLength={6}
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Enter the 6-digit code sent to your email address.
+                      </p>
+                    </div>
+                    
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button type="submit" disabled={isVerifying || verificationCode.length !== 6}>
+                        {isVerifying ? "Verifying..." : "Verify Email"}
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={handleResendCode}
+                        disabled={isResending}
+                      >
+                        {isResending ? "Resending..." : "Resend Code"}
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </main>
