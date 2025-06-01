@@ -47,7 +47,18 @@ export async function apiCall(options: ApiCallOptions): Promise<any> {
     }
   }
   console.log("API Call Config:", config);
-  const response = await axios(config);
-  debugger;
-  return response.data;
+  try {
+    const response = await axios(config);
+    return response.data;
+  } catch (error: any) {
+    // If unauthorized or token expired, redirect to login
+    if (
+      error.response &&
+      (error.response.status === 401 || error.response.status === 403)
+    ) {
+      window.location.href = "/login";
+      return; // Prevent further execution
+    }
+    throw error;
+  }
 }
