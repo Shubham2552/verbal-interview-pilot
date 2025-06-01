@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User, Mail, Lock, Shield, ShieldCheck } from "lucide-react";
+import ChangePasswordDialog from "@/components/ChangePasswordDialog";
 
 const Profile = () => {
   const { userEmail, login } = useAuth();
@@ -19,6 +20,7 @@ const Profile = () => {
   const [email, setEmail] = useState(userEmail || "");
   const [isEditing, setIsEditing] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [showChangePasswordDialog, setShowChangePasswordDialog] = useState(false);
   
   // Email verification states
   const [isEmailVerified, setIsEmailVerified] = useState(localStorage.getItem("emailVerified") === "true");
@@ -221,10 +223,11 @@ const Profile = () => {
                         <p className="text-sm font-medium">Password</p>
                         <p className="text-muted-foreground">********</p>
                       </div>
-                      <Button variant="link" className="ml-auto" onClick={() => toast({
-                        title: "Feature coming soon",
-                        description: "Password reset functionality is coming soon."
-                      })}>
+                      <Button 
+                        variant="link" 
+                        className="ml-auto" 
+                        onClick={() => setShowChangePasswordDialog(true)}
+                      >
                         Change password
                       </Button>
                     </div>
@@ -283,6 +286,11 @@ const Profile = () => {
           </div>
         </div>
       </main>
+      
+      <ChangePasswordDialog 
+        open={showChangePasswordDialog} 
+        onOpenChange={setShowChangePasswordDialog} 
+      />
       
       <Footer />
     </div>
