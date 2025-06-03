@@ -1,12 +1,14 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import InterviewCard from "@/components/InterviewCard";
+import InterviewCardSkeleton from "@/components/skeletons/InterviewCardSkeleton";
+import PageSkeleton from "@/components/skeletons/PageSkeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useLoading } from "@/hooks/useLoading";
 
 // Sample data for demonstration
 const sampleInterviews = [
@@ -56,6 +58,17 @@ const sampleInterviews = [
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("all");
+  const [isLoading, setIsLoading] = useState(true);
+  const showSkeleton = useLoading(isLoading, { minDuration: 800 });
+  
+  // Simulate data loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1200);
+    
+    return () => clearTimeout(timer);
+  }, []);
   
   const completedInterviews = sampleInterviews.filter(
     (interview) => interview.status === "completed"
@@ -74,6 +87,18 @@ const Dashboard = () => {
   const averageScore = totalInterviews > 0
     ? Math.round(completedInterviews.reduce((acc, curr) => acc + (curr.score || 0), 0) / totalInterviews)
     : 0;
+
+  if (showSkeleton) {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow">
+          <PageSkeleton showStats={true} showTabs={true} cardCount={5} />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
