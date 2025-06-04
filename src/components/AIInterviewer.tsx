@@ -233,16 +233,46 @@ const DetailedInterviewerAvatar: React.FC<{
         <meshStandardMaterial color="#8B0000" />
       </mesh>
       
+      {/* Ears */}
+      <mesh position={[-1, 0.1, 0.2]}>
+        <sphereGeometry args={[0.15, 8, 16]} />
+        <meshStandardMaterial color={colors.skin} />
+      </mesh>
+      <mesh position={[1, 0.1, 0.2]}>
+        <sphereGeometry args={[0.15, 8, 16]} />
+        <meshStandardMaterial color={colors.skin} />
+      </mesh>
+      
       {/* Neck */}
       <mesh position={[0, -1.2, 0]} castShadow>
         <cylinderGeometry args={[0.3, 0.4, 0.6]} />
         <meshStandardMaterial color={colors.skin} />
       </mesh>
       
-      {/* Shirt/Professional attire */}
+      {/* Torso/Shirt */}
       <mesh position={[0, -2, 0]} castShadow>
         <cylinderGeometry args={[0.8, 1.2, 1.5]} />
         <meshStandardMaterial color={colors.clothes} />
+      </mesh>
+      
+      {/* Arms */}
+      <mesh position={[-1.2, -2, 0]} rotation={[0, 0, 0.3]} castShadow>
+        <cylinderGeometry args={[0.2, 0.25, 1.8]} />
+        <meshStandardMaterial color={colors.clothes} />
+      </mesh>
+      <mesh position={[1.2, -2, 0]} rotation={[0, 0, -0.3]} castShadow>
+        <cylinderGeometry args={[0.2, 0.25, 1.8]} />
+        <meshStandardMaterial color={colors.clothes} />
+      </mesh>
+      
+      {/* Hands */}
+      <mesh position={[-1.7, -2.8, 0]} castShadow>
+        <sphereGeometry args={[0.15, 16, 16]} />
+        <meshStandardMaterial color={colors.skin} />
+      </mesh>
+      <mesh position={[1.7, -2.8, 0]} castShadow>
+        <sphereGeometry args={[0.15, 16, 16]} />
+        <meshStandardMaterial color={colors.skin} />
       </mesh>
       
       {/* Collar */}
