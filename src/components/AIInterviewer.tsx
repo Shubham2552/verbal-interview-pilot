@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, Sphere, Box, OrbitControls, Environment } from '@react-three/drei';
@@ -139,12 +138,12 @@ const DetailedRobertAvatar: React.FC<{
   const leftArmRef = useRef<THREE.Mesh>(null!);
   const rightArmRef = useRef<THREE.Mesh>(null!);
   
-  // Robert's professional appearance
+  // Robert's professional appearance with theme colors
   const colors = {
     skin: '#FDBCB4',
     hair: '#2F4F4F',
-    clothes: '#1a365d', // Professional navy
-    tie: '#8B0000'
+    clothes: 'hsl(var(--primary))', // Use theme primary color
+    tie: 'hsl(var(--destructive))' // Use theme destructive color
   };
   
   useFrame((state) => {
@@ -197,7 +196,7 @@ const DetailedRobertAvatar: React.FC<{
           color={colors.skin}
           metalness={0.1}
           roughness={0.9}
-          emissive={isActive ? '#1a365d' : '#000000'}
+          emissive={isActive ? 'hsl(var(--primary))' : '#000000'}
           emissiveIntensity={isActive ? 0.05 : 0}
         />
       </mesh>
@@ -238,31 +237,31 @@ const DetailedRobertAvatar: React.FC<{
           <meshStandardMaterial color="#000000" />
         </mesh>
         
-        {/* Professional glasses */}
+        {/* Professional glasses with theme colors */}
         <group position={[0, 0, 0.1]}>
           {/* Left lens frame */}
           <mesh position={[-0.28, 0, 0]}>
             <torusGeometry args={[0.18, 0.025, 8, 16]} />
-            <meshStandardMaterial color="#2d3748" metalness={0.3} roughness={0.7} />
+            <meshStandardMaterial color="hsl(var(--foreground))" metalness={0.3} roughness={0.7} />
           </mesh>
           {/* Right lens frame */}
           <mesh position={[0.28, 0, 0]}>
             <torusGeometry args={[0.18, 0.025, 8, 16]} />
-            <meshStandardMaterial color="#2d3748" metalness={0.3} roughness={0.7} />
+            <meshStandardMaterial color="hsl(var(--foreground))" metalness={0.3} roughness={0.7} />
           </mesh>
           {/* Bridge */}
           <mesh position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
             <cylinderGeometry args={[0.02, 0.02, 0.3]} />
-            <meshStandardMaterial color="#2d3748" />
+            <meshStandardMaterial color="hsl(var(--foreground))" />
           </mesh>
           {/* Temples */}
           <mesh position={[-0.45, 0, -0.3]} rotation={[0, Math.PI / 6, 0]}>
             <cylinderGeometry args={[0.015, 0.015, 0.8]} />
-            <meshStandardMaterial color="#2d3748" />
+            <meshStandardMaterial color="hsl(var(--foreground))" />
           </mesh>
           <mesh position={[0.45, 0, -0.3]} rotation={[0, -Math.PI / 6, 0]}>
             <cylinderGeometry args={[0.015, 0.015, 0.8]} />
-            <meshStandardMaterial color="#2d3748" />
+            <meshStandardMaterial color="hsl(var(--foreground))" />
           </mesh>
         </group>
         
@@ -389,13 +388,13 @@ const DetailedRobertAvatar: React.FC<{
         <meshStandardMaterial color="#ffffff" />
       </mesh>
       
-      {/* Voice visualization when speaking */}
+      {/* Voice visualization when speaking with theme colors */}
       {isSpeaking && (
         <>
           <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
             <ringGeometry args={[1.8, 2.1, 16]} />
             <meshBasicMaterial 
-              color="#1a365d" 
+              color="hsl(var(--primary))" 
               transparent 
               opacity={0.4 + audioLevel * 0.4}
             />
@@ -403,7 +402,7 @@ const DetailedRobertAvatar: React.FC<{
           <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, Math.PI / 4]}>
             <ringGeometry args={[2.3, 2.6, 16]} />
             <meshBasicMaterial 
-              color="#1a365d" 
+              color="hsl(var(--primary))" 
               transparent 
               opacity={0.3 + audioLevel * 0.3}
             />
@@ -411,7 +410,7 @@ const DetailedRobertAvatar: React.FC<{
           <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, Math.PI / 2]}>
             <ringGeometry args={[2.8, 3.1, 16]} />
             <meshBasicMaterial 
-              color="#1a365d" 
+              color="hsl(var(--primary))" 
               transparent 
               opacity={0.2 + audioLevel * 0.2}
             />
@@ -474,31 +473,31 @@ const AIInterviewer: React.FC<AIInterviewerProps> = ({
         <Environment preset="city" />
       </Canvas>
       
-      {/* Professional interviewer info */}
-      <div className="absolute bottom-6 left-6 bg-slate-900/80 backdrop-blur-md rounded-xl p-4 text-white border border-slate-700/50 shadow-2xl">
+      {/* Professional interviewer info with theme colors */}
+      <div className="absolute bottom-6 left-6 bg-card/90 backdrop-blur-md rounded-xl p-4 border shadow-lg">
         <div className="flex items-center space-x-4">
           <div className={`w-4 h-4 rounded-full ${
-            isActive ? 'bg-blue-400 animate-pulse shadow-lg shadow-blue-400/50' : 'bg-gray-500'
+            isActive ? 'bg-primary animate-pulse' : 'bg-muted-foreground'
           }`} />
           <div>
-            <p className="font-bold text-lg">{name}</p>
-            <p className="text-sm text-blue-300">{role}</p>
-            <p className="text-xs text-gray-400 capitalize">Team Lead</p>
+            <p className="font-bold text-lg text-foreground">{name}</p>
+            <p className="text-sm text-primary">{role}</p>
+            <p className="text-xs text-muted-foreground capitalize">Team Lead</p>
           </div>
         </div>
       </div>
       
-      {/* Enhanced speaking indicator */}
+      {/* Enhanced speaking indicator with theme colors */}
       {isSpeaking && (
-        <div className="absolute top-6 right-6 bg-slate-900/80 backdrop-blur-md rounded-xl p-3 border border-blue-500/50">
+        <div className="absolute top-6 right-6 bg-card/90 backdrop-blur-md rounded-xl p-3 border border-primary/50 shadow-lg">
           <div className="flex items-center space-x-3">
-            <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse" />
-            <span className="text-sm text-white font-medium">Speaking</span>
+            <div className="w-3 h-3 bg-primary rounded-full animate-pulse" />
+            <span className="text-sm text-foreground font-medium">Speaking</span>
             <div className="flex space-x-1">
               {[...Array(5)].map((_, i) => (
                 <div
                   key={i}
-                  className="w-1 bg-gradient-to-t from-blue-400 to-blue-600 rounded-full"
+                  className="w-1 bg-gradient-to-t from-primary to-primary/60 rounded-full"
                   style={{
                     height: `${20 + Math.random() * audioLevel * 30}px`,
                     animation: `pulse ${0.8 + Math.random() * 0.4}s ease-in-out infinite`,
