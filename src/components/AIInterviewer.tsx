@@ -14,324 +14,406 @@ interface AIInterviewerProps {
   position?: [number, number, number];
 }
 
-const HomeEnvironment: React.FC = () => {
+const OfficeEnvironment: React.FC = () => {
   return (
     <group>
-      {/* Room walls */}
-      <mesh position={[0, 0, -8]} receiveShadow>
-        <planeGeometry args={[20, 12]} />
-        <meshStandardMaterial color="#f5f5f5" />
+      {/* Modern office background wall */}
+      <mesh position={[0, 0, -12]} receiveShadow>
+        <planeGeometry args={[25, 15]} />
+        <meshStandardMaterial color="#f8f9fa" />
       </mesh>
       
       {/* Floor */}
-      <mesh position={[0, -3, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[20, 16]} />
-        <meshStandardMaterial color="#8B4513" />
+      <mesh position={[0, -4, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[25, 20]} />
+        <meshStandardMaterial color="#2c3e50" />
       </mesh>
       
-      {/* Desk */}
-      <group position={[0, -1.5, -2]}>
+      {/* Executive desk */}
+      <group position={[0, -2, -3]}>
         <mesh position={[0, 0, 0]}>
-          <boxGeometry args={[6, 0.2, 3]} />
-          <meshStandardMaterial color="#654321" />
+          <boxGeometry args={[8, 0.3, 4]} />
+          <meshStandardMaterial color="#34495e" />
         </mesh>
         {/* Desk legs */}
-        <mesh position={[-2.5, -1, -1]}>
-          <cylinderGeometry args={[0.1, 0.1, 2]} />
-          <meshStandardMaterial color="#654321" />
+        <mesh position={[-3.5, -1.2, -1.5]}>
+          <cylinderGeometry args={[0.15, 0.15, 2.4]} />
+          <meshStandardMaterial color="#2c3e50" />
         </mesh>
-        <mesh position={[2.5, -1, -1]}>
-          <cylinderGeometry args={[0.1, 0.1, 2]} />
-          <meshStandardMaterial color="#654321" />
+        <mesh position={[3.5, -1.2, -1.5]}>
+          <cylinderGeometry args={[0.15, 0.15, 2.4]} />
+          <meshStandardMaterial color="#2c3e50" />
         </mesh>
-        <mesh position={[-2.5, -1, 1]}>
-          <cylinderGeometry args={[0.1, 0.1, 2]} />
-          <meshStandardMaterial color="#654321" />
+        <mesh position={[-3.5, -1.2, 1.5]}>
+          <cylinderGeometry args={[0.15, 0.15, 2.4]} />
+          <meshStandardMaterial color="#2c3e50" />
         </mesh>
-        <mesh position={[2.5, -1, 1]}>
-          <cylinderGeometry args={[0.1, 0.1, 2]} />
-          <meshStandardMaterial color="#654321" />
-        </mesh>
-      </group>
-      
-      {/* Laptop on desk */}
-      <group position={[1, -1.2, -1]}>
-        <mesh rotation={[-0.2, 0.3, 0]}>
-          <boxGeometry args={[1.2, 0.8, 0.05]} />
-          <meshStandardMaterial color="#2c2c2c" />
-        </mesh>
-        <mesh position={[0, -0.02, 0.4]} rotation={[1.37, 0.3, 0]}>
-          <boxGeometry args={[1.2, 0.05, 0.8]} />
-          <meshStandardMaterial color="#2c2c2c" />
+        <mesh position={[3.5, -1.2, 1.5]}>
+          <cylinderGeometry args={[0.15, 0.15, 2.4]} />
+          <meshStandardMaterial color="#2c3e50" />
         </mesh>
       </group>
       
-      {/* Bookshelf */}
-      <group position={[-6, 0, -6]}>
+      {/* Modern laptop */}
+      <group position={[2, -1.6, -2]}>
+        <mesh rotation={[-0.1, 0.2, 0]}>
+          <boxGeometry args={[1.5, 1, 0.08]} />
+          <meshStandardMaterial color="#1a1a1a" />
+        </mesh>
+        <mesh position={[0, -0.03, 0.5]} rotation={[1.47, 0.2, 0]}>
+          <boxGeometry args={[1.5, 0.08, 1]} />
+          <meshStandardMaterial color="#1a1a1a" />
+        </mesh>
+      </group>
+      
+      {/* Professional bookshelf */}
+      <group position={[-8, 1, -8]}>
         <mesh>
-          <boxGeometry args={[2, 8, 1]} />
+          <boxGeometry args={[3, 10, 1.5]} />
           <meshStandardMaterial color="#8B4513" />
         </mesh>
         {/* Books */}
-        <mesh position={[0, 2, 0.6]}>
-          <boxGeometry args={[0.8, 0.3, 0.1]} />
-          <meshStandardMaterial color="#ff6b6b" />
+        <mesh position={[0, 3, 0.8]}>
+          <boxGeometry args={[1.2, 0.4, 0.15]} />
+          <meshStandardMaterial color="#c0392b" />
         </mesh>
-        <mesh position={[0, 1.5, 0.6]}>
-          <boxGeometry args={[0.6, 0.3, 0.1]} />
-          <meshStandardMaterial color="#4ecdc4" />
+        <mesh position={[0, 2.4, 0.8]}>
+          <boxGeometry args={[1.0, 0.4, 0.15]} />
+          <meshStandardMaterial color="#2980b9" />
         </mesh>
-        <mesh position={[0, 1, 0.6]}>
-          <boxGeometry args={[0.7, 0.3, 0.1]} />
-          <meshStandardMaterial color="#45b7d1" />
+        <mesh position={[0, 1.8, 0.8]}>
+          <boxGeometry args={[1.1, 0.4, 0.15]} />
+          <meshStandardMaterial color="#27ae60" />
         </mesh>
       </group>
       
-      {/* Window with light */}
-      <group position={[6, 2, -7]}>
+      {/* Large window with cityview */}
+      <group position={[8, 3, -10]}>
         <mesh>
-          <planeGeometry args={[3, 4]} />
-          <meshBasicMaterial color="#87CEEB" transparent opacity={0.8} />
+          <planeGeometry args={[4, 6]} />
+          <meshBasicMaterial color="#87CEEB" transparent opacity={0.9} />
         </mesh>
         <mesh position={[0, 0, 0.1]}>
-          <planeGeometry args={[2.8, 3.8]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.3} />
+          <planeGeometry args={[3.8, 5.8]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.4} />
         </mesh>
       </group>
       
-      {/* Plant */}
-      <group position={[4, -2, -3]}>
+      {/* Professional plant */}
+      <group position={[5, -2.5, -4]}>
         <mesh>
-          <cylinderGeometry args={[0.3, 0.3, 1]} />
-          <meshStandardMaterial color="#8B4513" />
+          <cylinderGeometry args={[0.4, 0.4, 1.2]} />
+          <meshStandardMaterial color="#654321" />
         </mesh>
-        <mesh position={[0, 1, 0]}>
-          <sphereGeometry args={[0.8, 8, 6]} />
+        <mesh position={[0, 1.2, 0]}>
+          <sphereGeometry args={[1, 8, 6]} />
           <meshStandardMaterial color="#228B22" />
+        </mesh>
+      </group>
+      
+      {/* Office chair behind */}
+      <group position={[0, -2, 2]}>
+        <mesh position={[0, 1, 0]}>
+          <cylinderGeometry args={[0.8, 0.8, 0.2]} />
+          <meshStandardMaterial color="#2c3e50" />
+        </mesh>
+        <mesh position={[0, 2.5, -0.3]}>
+          <boxGeometry args={[1.2, 2, 0.2]} />
+          <meshStandardMaterial color="#2c3e50" />
         </mesh>
       </group>
     </group>
   );
 };
 
-const DetailedInterviewerAvatar: React.FC<{
+const DetailedRobertAvatar: React.FC<{
   isActive: boolean;
   isSpeaking: boolean;
   audioLevel: number;
-  personality: string;
   position: [number, number, number];
-}> = ({ isActive, isSpeaking, audioLevel, personality, position }) => {
+}> = ({ isActive, isSpeaking, audioLevel, position }) => {
   const meshRef = useRef<THREE.Mesh>(null!);
   const eyesRef = useRef<THREE.Group>(null!);
   const mouthRef = useRef<THREE.Mesh>(null!);
   const hairRef = useRef<THREE.Mesh>(null!);
+  const leftArmRef = useRef<THREE.Mesh>(null!);
+  const rightArmRef = useRef<THREE.Mesh>(null!);
   
-  // Personality-based colors and features
-  const personalityColors = {
-    professional: { skin: '#FDBCB4', hair: '#8B4513', clothes: '#4F46E5' },
-    friendly: { skin: '#F4C2A1', hair: '#DAA520', clothes: '#10B981' },
-    technical: { skin: '#E8C5A0', hair: '#2F4F4F', clothes: '#F59E0B' },
-    creative: { skin: '#F7D1C4', hair: '#800080', clothes: '#EF4444' }
+  // Robert's professional appearance
+  const colors = {
+    skin: '#FDBCB4',
+    hair: '#2F4F4F',
+    clothes: '#1a365d', // Professional navy
+    tie: '#8B0000'
   };
-  
-  const colors = personalityColors[personality as keyof typeof personalityColors] || personalityColors.professional;
   
   useFrame((state) => {
     if (meshRef.current) {
       // Subtle floating animation
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.8) * 0.02;
+      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.6) * 0.03;
       
-      // Active state subtle rotation
+      // Professional slight head movements
       if (isActive) {
-        meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.05;
+        meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.03;
+        meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.15) * 0.02;
       }
     }
     
-    // Natural blinking animation
+    // Natural blinking
     if (eyesRef.current) {
-      const blinkTime = Math.sin(state.clock.elapsedTime * 2);
-      if (blinkTime > 0.98) {
+      const blinkTime = Math.sin(state.clock.elapsedTime * 1.5);
+      if (blinkTime > 0.97) {
         eyesRef.current.scale.y = 0.1;
       } else {
         eyesRef.current.scale.y = 1;
       }
     }
     
-    // Enhanced mouth animation when speaking
+    // Speaking mouth animation
     if (mouthRef.current && isSpeaking) {
-      const talkAnimation = Math.sin(state.clock.elapsedTime * 15) * audioLevel;
-      mouthRef.current.scale.y = 1 + talkAnimation * 0.5;
-      mouthRef.current.scale.x = 1 + talkAnimation * 0.3;
+      const talkAnimation = Math.sin(state.clock.elapsedTime * 12) * audioLevel;
+      mouthRef.current.scale.y = 1 + talkAnimation * 0.4;
+      mouthRef.current.scale.x = 1 + talkAnimation * 0.2;
     }
     
-    // Hair movement
-    if (hairRef.current) {
-      hairRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.02;
+    // Professional hand gestures when speaking
+    if (leftArmRef.current && rightArmRef.current) {
+      if (isSpeaking) {
+        leftArmRef.current.rotation.z = 0.2 + Math.sin(state.clock.elapsedTime * 3) * 0.1;
+        rightArmRef.current.rotation.z = -0.2 + Math.sin(state.clock.elapsedTime * 2.5) * 0.1;
+      } else {
+        leftArmRef.current.rotation.z = 0.2;
+        rightArmRef.current.rotation.z = -0.2;
+      }
     }
   });
   
   return (
-    <group position={position}>
-      {/* Enhanced head with skin tone */}
+    <group position={position} scale={[1.2, 1.2, 1.2]}>
+      {/* Enhanced head */}
       <mesh ref={meshRef} castShadow>
         <sphereGeometry args={[1, 32, 32]} />
         <meshStandardMaterial 
           color={colors.skin}
           metalness={0.1}
-          roughness={0.8}
-          emissive={isActive ? colors.clothes : '#000000'}
-          emissiveIntensity={isActive ? 0.1 : 0}
+          roughness={0.9}
+          emissive={isActive ? '#1a365d' : '#000000'}
+          emissiveIntensity={isActive ? 0.05 : 0}
         />
       </mesh>
       
-      {/* Hair */}
-      <mesh ref={hairRef} position={[0, 0.5, 0]} castShadow>
-        <sphereGeometry args={[1.1, 16, 16]} />
-        <meshStandardMaterial color={colors.hair} roughness={0.9} />
+      {/* Professional hair */}
+      <mesh ref={hairRef} position={[0, 0.6, 0]} castShadow>
+        <sphereGeometry args={[1.05, 16, 16]} />
+        <meshStandardMaterial color={colors.hair} roughness={0.95} />
       </mesh>
       
-      {/* Eyes with more detail */}
-      <group ref={eyesRef} position={[0, 0.2, 0.8]}>
+      {/* Detailed eyes with glasses */}
+      <group ref={eyesRef} position={[0, 0.2, 0.85]}>
         {/* Eye whites */}
-        <mesh position={[-0.25, 0, 0]}>
-          <sphereGeometry args={[0.12, 16, 16]} />
+        <mesh position={[-0.28, 0, 0]}>
+          <sphereGeometry args={[0.14, 16, 16]} />
           <meshStandardMaterial color="#ffffff" />
         </mesh>
-        <mesh position={[0.25, 0, 0]}>
-          <sphereGeometry args={[0.12, 16, 16]} />
+        <mesh position={[0.28, 0, 0]}>
+          <sphereGeometry args={[0.14, 16, 16]} />
           <meshStandardMaterial color="#ffffff" />
+        </mesh>
+        {/* Iris */}
+        <mesh position={[-0.28, 0, 0.12]}>
+          <sphereGeometry args={[0.08, 16, 16]} />
+          <meshStandardMaterial color="#4a5568" />
+        </mesh>
+        <mesh position={[0.28, 0, 0.12]}>
+          <sphereGeometry args={[0.08, 16, 16]} />
+          <meshStandardMaterial color="#4a5568" />
         </mesh>
         {/* Pupils */}
-        <mesh position={[-0.25, 0, 0.1]}>
-          <sphereGeometry args={[0.06, 16, 16]} />
-          <meshStandardMaterial color="#1a1a1a" />
+        <mesh position={[-0.28, 0, 0.13]}>
+          <sphereGeometry args={[0.04, 16, 16]} />
+          <meshStandardMaterial color="#000000" />
         </mesh>
-        <mesh position={[0.25, 0, 0.1]}>
-          <sphereGeometry args={[0.06, 16, 16]} />
-          <meshStandardMaterial color="#1a1a1a" />
+        <mesh position={[0.28, 0, 0.13]}>
+          <sphereGeometry args={[0.04, 16, 16]} />
+          <meshStandardMaterial color="#000000" />
         </mesh>
+        
+        {/* Professional glasses */}
+        <group position={[0, 0, 0.1]}>
+          {/* Left lens frame */}
+          <mesh position={[-0.28, 0, 0]}>
+            <torusGeometry args={[0.18, 0.025, 8, 16]} />
+            <meshStandardMaterial color="#2d3748" metalness={0.3} roughness={0.7} />
+          </mesh>
+          {/* Right lens frame */}
+          <mesh position={[0.28, 0, 0]}>
+            <torusGeometry args={[0.18, 0.025, 8, 16]} />
+            <meshStandardMaterial color="#2d3748" metalness={0.3} roughness={0.7} />
+          </mesh>
+          {/* Bridge */}
+          <mesh position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.02, 0.02, 0.3]} />
+            <meshStandardMaterial color="#2d3748" />
+          </mesh>
+          {/* Temples */}
+          <mesh position={[-0.45, 0, -0.3]} rotation={[0, Math.PI / 6, 0]}>
+            <cylinderGeometry args={[0.015, 0.015, 0.8]} />
+            <meshStandardMaterial color="#2d3748" />
+          </mesh>
+          <mesh position={[0.45, 0, -0.3]} rotation={[0, -Math.PI / 6, 0]}>
+            <cylinderGeometry args={[0.015, 0.015, 0.8]} />
+            <meshStandardMaterial color="#2d3748" />
+          </mesh>
+        </group>
+        
         {/* Eyebrows */}
-        <mesh position={[-0.25, 0.15, 0.05]} rotation={[0, 0, 0.1]}>
-          <boxGeometry args={[0.3, 0.05, 0.02]} />
+        <mesh position={[-0.28, 0.18, 0.05]} rotation={[0, 0, 0.1]}>
+          <boxGeometry args={[0.35, 0.06, 0.03]} />
           <meshStandardMaterial color={colors.hair} />
         </mesh>
-        <mesh position={[0.25, 0.15, 0.05]} rotation={[0, 0, -0.1]}>
-          <boxGeometry args={[0.3, 0.05, 0.02]} />
+        <mesh position={[0.28, 0.18, 0.05]} rotation={[0, 0, -0.1]}>
+          <boxGeometry args={[0.35, 0.06, 0.03]} />
           <meshStandardMaterial color={colors.hair} />
         </mesh>
       </group>
       
-      {/* Nose */}
-      <mesh position={[0, 0, 0.9]}>
-        <coneGeometry args={[0.08, 0.2, 8]} />
+      {/* Detailed nose */}
+      <mesh position={[0, 0, 0.92]}>
+        <coneGeometry args={[0.09, 0.25, 8]} />
         <meshStandardMaterial color={colors.skin} />
       </mesh>
       
-      {/* Enhanced mouth */}
-      <mesh ref={mouthRef} position={[0, -0.3, 0.8]}>
-        <sphereGeometry args={[0.15, 16, 8]} />
-        <meshStandardMaterial color="#8B0000" />
+      {/* Professional mouth */}
+      <mesh ref={mouthRef} position={[0, -0.32, 0.82]}>
+        <sphereGeometry args={[0.16, 16, 8]} />
+        <meshStandardMaterial color="#8B4A4A" />
       </mesh>
       
       {/* Ears */}
-      <mesh position={[-1, 0.1, 0.2]}>
-        <sphereGeometry args={[0.15, 8, 16]} />
+      <mesh position={[-1.02, 0.1, 0.15]}>
+        <sphereGeometry args={[0.16, 8, 16]} />
         <meshStandardMaterial color={colors.skin} />
       </mesh>
-      <mesh position={[1, 0.1, 0.2]}>
-        <sphereGeometry args={[0.15, 8, 16]} />
+      <mesh position={[1.02, 0.1, 0.15]}>
+        <sphereGeometry args={[0.16, 8, 16]} />
         <meshStandardMaterial color={colors.skin} />
       </mesh>
       
       {/* Neck */}
-      <mesh position={[0, -1.2, 0]} castShadow>
-        <cylinderGeometry args={[0.3, 0.4, 0.6]} />
+      <mesh position={[0, -1.25, 0]} castShadow>
+        <cylinderGeometry args={[0.32, 0.42, 0.65]} />
         <meshStandardMaterial color={colors.skin} />
       </mesh>
       
-      {/* Torso/Shirt */}
-      <mesh position={[0, -2, 0]} castShadow>
-        <cylinderGeometry args={[0.8, 1.2, 1.5]} />
-        <meshStandardMaterial color={colors.clothes} />
-      </mesh>
-      
-      {/* Arms */}
-      <mesh position={[-1.2, -2, 0]} rotation={[0, 0, 0.3]} castShadow>
-        <cylinderGeometry args={[0.2, 0.25, 1.8]} />
-        <meshStandardMaterial color={colors.clothes} />
-      </mesh>
-      <mesh position={[1.2, -2, 0]} rotation={[0, 0, -0.3]} castShadow>
-        <cylinderGeometry args={[0.2, 0.25, 1.8]} />
-        <meshStandardMaterial color={colors.clothes} />
-      </mesh>
-      
-      {/* Hands */}
-      <mesh position={[-1.7, -2.8, 0]} castShadow>
-        <sphereGeometry args={[0.15, 16, 16]} />
-        <meshStandardMaterial color={colors.skin} />
-      </mesh>
-      <mesh position={[1.7, -2.8, 0]} castShadow>
-        <sphereGeometry args={[0.15, 16, 16]} />
-        <meshStandardMaterial color={colors.skin} />
-      </mesh>
-      
-      {/* Collar */}
-      <mesh position={[0, -1.4, 0.3]}>
-        <boxGeometry args={[0.8, 0.2, 0.1]} />
+      {/* Professional shirt */}
+      <mesh position={[0, -2.1, 0]} castShadow>
+        <cylinderGeometry args={[0.85, 1.25, 1.6]} />
         <meshStandardMaterial color="#ffffff" />
       </mesh>
       
-      {/* Tie (for professional personality) */}
-      {personality === 'professional' && (
-        <mesh position={[0, -1.8, 0.4]}>
-          <boxGeometry args={[0.15, 0.8, 0.05]} />
-          <meshStandardMaterial color="#000080" />
+      {/* Professional suit jacket */}
+      <mesh position={[0, -2.1, 0]} castShadow>
+        <cylinderGeometry args={[0.9, 1.3, 1.65]} />
+        <meshStandardMaterial color={colors.clothes} />
+      </mesh>
+      
+      {/* Professional tie */}
+      <mesh position={[0, -1.9, 0.45]}>
+        <boxGeometry args={[0.18, 1.0, 0.06]} />
+        <meshStandardMaterial color={colors.tie} />
+      </mesh>
+      
+      {/* Detailed arms in professional position */}
+      <mesh ref={leftArmRef} position={[-1.25, -2.1, 0]} rotation={[0, 0, 0.2]} castShadow>
+        <cylinderGeometry args={[0.22, 0.26, 1.9]} />
+        <meshStandardMaterial color={colors.clothes} />
+      </mesh>
+      <mesh ref={rightArmRef} position={[1.25, -2.1, 0]} rotation={[0, 0, -0.2]} castShadow>
+        <cylinderGeometry args={[0.22, 0.26, 1.9]} />
+        <meshStandardMaterial color={colors.clothes} />
+      </mesh>
+      
+      {/* Detailed hands in professional position */}
+      <mesh position={[-1.65, -2.9, 0.3]} castShadow>
+        <sphereGeometry args={[0.16, 16, 16]} />
+        <meshStandardMaterial color={colors.skin} />
+      </mesh>
+      <mesh position={[1.65, -2.9, 0.3]} castShadow>
+        <sphereGeometry args={[0.16, 16, 16]} />
+        <meshStandardMaterial color={colors.skin} />
+      </mesh>
+      
+      {/* Fingers for left hand */}
+      <group position={[-1.65, -2.9, 0.3]}>
+        <mesh position={[0.08, 0, 0.12]}>
+          <cylinderGeometry args={[0.025, 0.025, 0.15]} />
+          <meshStandardMaterial color={colors.skin} />
         </mesh>
-      )}
+        <mesh position={[0.12, 0, 0.05]}>
+          <cylinderGeometry args={[0.025, 0.025, 0.18]} />
+          <meshStandardMaterial color={colors.skin} />
+        </mesh>
+        <mesh position={[0.1, 0, -0.05]}>
+          <cylinderGeometry args={[0.025, 0.025, 0.16]} />
+          <meshStandardMaterial color={colors.skin} />
+        </mesh>
+        <mesh position={[0.05, 0, -0.12]}>
+          <cylinderGeometry args={[0.02, 0.02, 0.12]} />
+          <meshStandardMaterial color={colors.skin} />
+        </mesh>
+      </group>
       
-      {/* Glasses (for technical personality) */}
-      {personality === 'technical' && (
-        <group position={[0, 0.1, 0.7]}>
-          <mesh position={[-0.3, 0, 0]}>
-            <torusGeometry args={[0.15, 0.02, 8, 16]} />
-            <meshStandardMaterial color="#333333" />
-          </mesh>
-          <mesh position={[0.3, 0, 0]}>
-            <torusGeometry args={[0.15, 0.02, 8, 16]} />
-            <meshStandardMaterial color="#333333" />
-          </mesh>
-          <mesh position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.01, 0.01, 0.4]} />
-            <meshStandardMaterial color="#333333" />
-          </mesh>
-        </group>
-      )}
+      {/* Fingers for right hand */}
+      <group position={[1.65, -2.9, 0.3]}>
+        <mesh position={[-0.08, 0, 0.12]}>
+          <cylinderGeometry args={[0.025, 0.025, 0.15]} />
+          <meshStandardMaterial color={colors.skin} />
+        </mesh>
+        <mesh position={[-0.12, 0, 0.05]}>
+          <cylinderGeometry args={[0.025, 0.025, 0.18]} />
+          <meshStandardMaterial color={colors.skin} />
+        </mesh>
+        <mesh position={[-0.1, 0, -0.05]}>
+          <cylinderGeometry args={[0.025, 0.025, 0.16]} />
+          <meshStandardMaterial color={colors.skin} />
+        </mesh>
+        <mesh position={[-0.05, 0, -0.12]}>
+          <cylinderGeometry args={[0.02, 0.02, 0.12]} />
+          <meshStandardMaterial color={colors.skin} />
+        </mesh>
+      </group>
       
-      {/* Voice visualization rings when speaking */}
+      {/* Collar and suit details */}
+      <mesh position={[0, -1.45, 0.35]}>
+        <boxGeometry args={[0.9, 0.25, 0.12]} />
+        <meshStandardMaterial color="#ffffff" />
+      </mesh>
+      
+      {/* Voice visualization when speaking */}
       {isSpeaking && (
         <>
           <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[1.5, 1.8, 16]} />
+            <ringGeometry args={[1.8, 2.1, 16]} />
             <meshBasicMaterial 
-              color={colors.clothes} 
+              color="#1a365d" 
               transparent 
-              opacity={0.3 + audioLevel * 0.4}
+              opacity={0.4 + audioLevel * 0.4}
             />
           </mesh>
           <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, Math.PI / 4]}>
-            <ringGeometry args={[2.0, 2.3, 16]} />
+            <ringGeometry args={[2.3, 2.6, 16]} />
             <meshBasicMaterial 
-              color={colors.clothes} 
+              color="#1a365d" 
               transparent 
-              opacity={0.2 + audioLevel * 0.3}
+              opacity={0.3 + audioLevel * 0.3}
             />
           </mesh>
           <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, Math.PI / 2]}>
-            <ringGeometry args={[2.5, 2.8, 16]} />
+            <ringGeometry args={[2.8, 3.1, 16]} />
             <meshBasicMaterial 
-              color={colors.clothes} 
+              color="#1a365d" 
               transparent 
-              opacity={0.1 + audioLevel * 0.2}
+              opacity={0.2 + audioLevel * 0.2}
             />
           </mesh>
         </>
@@ -352,71 +434,79 @@ const AIInterviewer: React.FC<AIInterviewerProps> = ({
   return (
     <div className="relative w-full h-full">
       <Canvas 
-        camera={{ position: [0, 0, 6], fov: 60 }}
+        camera={{ position: [0, 1, 8], fov: 50 }}
         shadows
       >
-        {/* Enhanced lighting setup */}
-        <ambientLight intensity={0.4} />
+        {/* Professional lighting setup */}
+        <ambientLight intensity={0.6} />
         <directionalLight 
-          position={[10, 10, 5]} 
-          intensity={1}
+          position={[12, 15, 8]} 
+          intensity={1.2}
           castShadow
-          shadow-mapSize={[2048, 2048]}
+          shadow-mapSize={[4096, 4096]}
+          shadow-camera-far={50}
+          shadow-camera-left={-20}
+          shadow-camera-right={20}
+          shadow-camera-top={20}
+          shadow-camera-bottom={-20}
         />
-        <pointLight position={[-10, -10, -10]} intensity={0.3} />
+        <pointLight position={[-15, 8, 5]} intensity={0.4} color="#f4f4f4" />
         <spotLight 
-          position={[0, 15, 5]} 
-          angle={0.3}
+          position={[0, 20, 10]} 
+          angle={0.2}
           intensity={0.8}
           castShadow
+          color="#ffffff"
         />
         
-        {/* Home environment */}
-        <HomeEnvironment />
+        {/* Office environment */}
+        <OfficeEnvironment />
         
-        {/* Detailed interviewer avatar */}
-        <DetailedInterviewerAvatar
+        {/* Robert in center focus */}
+        <DetailedRobertAvatar
           isActive={isActive}
           isSpeaking={isSpeaking}
           audioLevel={audioLevel}
-          personality={personality}
-          position={position}
+          position={[0, 0, 0]}
         />
         
-        {/* Better environment */}
-        <Environment preset="apartment" />
+        {/* Professional environment lighting */}
+        <Environment preset="city" />
       </Canvas>
       
-      {/* Enhanced interviewer info overlay */}
-      <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-sm rounded-lg p-3 text-white border border-white/20">
-        <div className="flex items-center space-x-3">
-          <div className={`w-3 h-3 rounded-full ${
-            isActive ? 'bg-green-400 animate-pulse' : 'bg-gray-400'
+      {/* Professional interviewer info */}
+      <div className="absolute bottom-6 left-6 bg-slate-900/80 backdrop-blur-md rounded-xl p-4 text-white border border-slate-700/50 shadow-2xl">
+        <div className="flex items-center space-x-4">
+          <div className={`w-4 h-4 rounded-full ${
+            isActive ? 'bg-blue-400 animate-pulse shadow-lg shadow-blue-400/50' : 'bg-gray-500'
           }`} />
           <div>
-            <p className="font-semibold text-sm">{name}</p>
-            <p className="text-xs text-gray-300">{role}</p>
-            <p className="text-xs text-blue-300 capitalize">{personality}</p>
+            <p className="font-bold text-lg">{name}</p>
+            <p className="text-sm text-blue-300">{role}</p>
+            <p className="text-xs text-gray-400 capitalize">Team Lead</p>
           </div>
         </div>
       </div>
       
-      {/* Enhanced audio visualization */}
+      {/* Enhanced speaking indicator */}
       {isSpeaking && (
-        <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-2">
-          <div className="flex items-center space-x-1">
-            <span className="text-xs text-white mr-2">Speaking</span>
-            {[...Array(6)].map((_, i) => (
-              <div
-                key={i}
-                className="w-1 bg-gradient-to-t from-green-400 to-blue-400 rounded-full animate-pulse"
-                style={{
-                  height: `${15 + Math.random() * audioLevel * 25}px`,
-                  animationDelay: `${i * 0.1}s`,
-                  animationDuration: `${0.5 + Math.random() * 0.5}s`
-                }}
-              />
-            ))}
+        <div className="absolute top-6 right-6 bg-slate-900/80 backdrop-blur-md rounded-xl p-3 border border-blue-500/50">
+          <div className="flex items-center space-x-3">
+            <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse" />
+            <span className="text-sm text-white font-medium">Speaking</span>
+            <div className="flex space-x-1">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className="w-1 bg-gradient-to-t from-blue-400 to-blue-600 rounded-full"
+                  style={{
+                    height: `${20 + Math.random() * audioLevel * 30}px`,
+                    animation: `pulse ${0.8 + Math.random() * 0.4}s ease-in-out infinite`,
+                    animationDelay: `${i * 0.1}s`
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       )}

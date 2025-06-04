@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import AIInterviewer from './AIInterviewer';
 import VoiceRecorder from './VoiceRecorder';
@@ -35,7 +34,6 @@ const InterviewRoom: React.FC<InterviewRoomProps> = ({
   isVolumeOn,
   isListening
 }) => {
-  const [activeInterviewer, setActiveInterviewer] = useState<string | null>(null);
   const [userTranscript, setUserTranscript] = useState<string>('');
   const [showTranscript, setShowTranscript] = useState<boolean>(false);
 
@@ -59,77 +57,52 @@ const InterviewRoom: React.FC<InterviewRoomProps> = ({
     }
   }, [isListening]);
 
-  // Simulate interviewer switching
-  useEffect(() => {
-    if (interviewers.length > 0) {
-      const interval = setInterval(() => {
-        const randomInterviewer = interviewers[Math.floor(Math.random() * interviewers.length)];
-        setActiveInterviewer(randomInterviewer.id);
-      }, 10000); // Switch every 10 seconds
-
-      return () => clearInterval(interval);
-    }
-  }, [interviewers]);
-
-  const getGridLayout = (count: number) => {
-    switch (count) {
-      case 1:
-        return 'grid-cols-1';
-      case 2:
-        return 'grid-cols-2';
-      case 3:
-        return 'grid-cols-2 md:grid-cols-3';
-      case 4:
-        return 'grid-cols-2 md:grid-cols-2';
-      default:
-        return 'grid-cols-2 md:grid-cols-3';
-    }
-  };
+  // Get Robert (the team lead) as the main interviewer
+  const mainInterviewer = interviewers.find(interviewer => 
+    interviewer.role.includes('Team Lead') || interviewer.name.includes('Robert')
+  ) || interviewers[0];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
-      {/* Interview Grid */}
-      <div className={`grid ${getGridLayout(interviewers.length)} gap-4 h-[65vh] mb-6`}>
-        {interviewers.map((interviewer, index) => (
-          <Card 
-            key={interviewer.id} 
-            className="relative overflow-hidden bg-slate-800/50 border-slate-700 backdrop-blur-sm shadow-2xl"
-          >
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4">
+      {/* Single Large Interviewer View */}
+      <div className="h-[70vh] mb-6">
+        <Card className="relative overflow-hidden bg-slate-800/30 border-slate-600 backdrop-blur-sm shadow-2xl h-full">
+          {mainInterviewer && (
             <AIInterviewer
-              name={interviewer.name}
-              role={interviewer.role}
-              isActive={interviewer.isActive || activeInterviewer === interviewer.id}
-              isSpeaking={interviewer.isSpeaking}
-              audioLevel={interviewer.audioLevel}
-              personality={interviewer.personality}
+              name="Robert Brown"
+              role="Team Lead"
+              isActive={mainInterviewer.isActive}
+              isSpeaking={mainInterviewer.isSpeaking}
+              audioLevel={mainInterviewer.audioLevel}
+              personality="professional"
               position={[0, 0, 0]}
             />
-          </Card>
-        ))}
+          )}
+        </Card>
       </div>
 
       {/* Speech-to-text display when user is speaking */}
       {showTranscript && userTranscript && (
-        <Card className="mb-4 bg-gradient-to-r from-blue-900/80 to-purple-900/80 border-blue-500/50 backdrop-blur-sm">
-          <div className="p-4">
-            <div className="flex items-center mb-2">
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse mr-2" />
-              <span className="text-blue-200 text-sm font-medium">You are speaking</span>
+        <Card className="mb-4 bg-gradient-to-r from-blue-900/90 to-purple-900/90 border-blue-400/60 backdrop-blur-md shadow-2xl">
+          <div className="p-6">
+            <div className="flex items-center mb-3">
+              <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse mr-3 shadow-lg shadow-blue-400/50" />
+              <span className="text-blue-200 text-sm font-semibold">You are speaking</span>
             </div>
-            <p className="text-white text-lg leading-relaxed">{userTranscript}</p>
+            <p className="text-white text-xl leading-relaxed font-medium">{userTranscript}</p>
           </div>
         </Card>
       )}
 
       {/* Question Display */}
-      <Card className="mb-6 bg-slate-800/50 border-slate-700 backdrop-blur-sm shadow-lg">
+      <Card className="mb-6 bg-slate-800/40 border-slate-600 backdrop-blur-md shadow-xl">
         <div className="p-6">
           <div className="flex items-center mb-4">
-            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-3" />
-            <span className="text-white font-medium">Live Interview</span>
+            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-3 shadow-lg shadow-red-500/50" />
+            <span className="text-white font-semibold">Live Interview</span>
           </div>
-          <h2 className="text-xl font-semibold text-white mb-2">Current Question:</h2>
-          <p className="text-gray-300 text-lg leading-relaxed">{currentQuestion}</p>
+          <h2 className="text-2xl font-bold text-white mb-3">Current Question:</h2>
+          <p className="text-gray-200 text-xl leading-relaxed">{currentQuestion}</p>
         </div>
       </Card>
 
@@ -141,30 +114,30 @@ const InterviewRoom: React.FC<InterviewRoomProps> = ({
         />
       </div>
 
-      {/* Controls */}
-      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
-        <div className="flex items-center space-x-4 bg-slate-800/90 backdrop-blur-sm rounded-full px-6 py-4 border border-slate-700 shadow-2xl">
+      {/* Enhanced Controls */}
+      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2">
+        <div className="flex items-center space-x-6 bg-slate-900/95 backdrop-blur-md rounded-2xl px-8 py-5 border border-slate-700/50 shadow-2xl">
           <Button
             onClick={onMicToggle}
             variant={isMicOn ? "default" : "destructive"}
             size="lg"
-            className="rounded-full w-14 h-14 shadow-lg"
+            className="rounded-full w-16 h-16 shadow-xl transition-all duration-300 hover:scale-105"
           >
-            {isMicOn ? <Mic className="h-6 w-6" /> : <MicOff className="h-6 w-6" />}
+            {isMicOn ? <Mic className="h-7 w-7" /> : <MicOff className="h-7 w-7" />}
           </Button>
           
           {isListening && (
-            <div className="flex items-center space-x-2 text-green-400">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-sm">Listening...</span>
+            <div className="flex items-center space-x-3 text-green-400">
+              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse shadow-lg shadow-green-400/50" />
+              <span className="text-sm font-medium">Listening...</span>
               <div className="flex space-x-1">
-                {[...Array(3)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <div
                     key={i}
-                    className="w-1 h-4 bg-green-400 rounded-full animate-pulse"
+                    className="w-1 h-6 bg-green-400 rounded-full animate-pulse"
                     style={{
-                      animationDelay: `${i * 0.2}s`,
-                      animationDuration: '1s'
+                      animationDelay: `${i * 0.15}s`,
+                      animationDuration: '1.2s'
                     }}
                   />
                 ))}
@@ -176,28 +149,27 @@ const InterviewRoom: React.FC<InterviewRoomProps> = ({
             onClick={onVolumeToggle}
             variant={isVolumeOn ? "secondary" : "outline"}
             size="lg"
-            className="rounded-full w-14 h-14 shadow-lg"
+            className="rounded-full w-16 h-16 shadow-xl transition-all duration-300 hover:scale-105"
           >
-            {isVolumeOn ? <Volume2 className="h-6 w-6" /> : <VolumeX className="h-6 w-6" />}
+            {isVolumeOn ? <Volume2 className="h-7 w-7" /> : <VolumeX className="h-7 w-7" />}
           </Button>
         </div>
       </div>
 
-      {/* Enhanced ambient particles effect */}
+      {/* Professional ambient particles */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {[...Array(30)].map((_, i) => (
+        {[...Array(20)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 rounded-full"
+            className="absolute w-1 h-1 rounded-full opacity-30"
             style={{
               background: `linear-gradient(45deg, ${
-                ['#3B82F6', '#8B5CF6', '#06B6D4', '#10B981'][Math.floor(Math.random() * 4)]
+                ['#3B82F6', '#1E40AF', '#1D4ED8'][Math.floor(Math.random() * 3)]
               }, transparent)`,
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              animation: `float ${3 + Math.random() * 4}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 3}s`,
-              opacity: 0.3 + Math.random() * 0.4
+              animation: `float ${4 + Math.random() * 6}s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 4}s`
             }}
           />
         ))}
