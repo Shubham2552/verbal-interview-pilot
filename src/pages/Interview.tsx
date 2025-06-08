@@ -1,10 +1,8 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import Header from "@/components/Header";
+import InterviewRoom from "@/components/InterviewRoom";
 import VoiceRecorder from "@/components/VoiceRecorder";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { 
   AlertDialog, 
   AlertDialogAction, 
@@ -16,7 +14,7 @@ import {
   AlertDialogTitle
 } from "@/components/ui/alert-dialog";
 import { Progress } from "@/components/ui/progress";
-import { Clock, ArrowRight } from "lucide-react";
+import { ArrowRight, Home } from "lucide-react";
 import { interviewTopics, difficultyLevels } from "./NewInterview";
 
 // Define question banks based on topic and level
@@ -161,6 +159,35 @@ const questionBank = {
   }
 };
 
+// Define interviewer profiles
+const interviewerProfiles = {
+  javascript: [
+    { id: 'js-tech', name: 'Alex Chen', role: 'Senior JavaScript Developer', personality: 'technical' as const },
+    { id: 'js-lead', name: 'Sarah Johnson', role: 'Tech Lead', personality: 'professional' as const }
+  ],
+  react: [
+    { id: 'react-senior', name: 'Mike Rodriguez', role: 'React Specialist', personality: 'friendly' as const },
+    { id: 'react-arch', name: 'Emily Zhang', role: 'Frontend Architect', personality: 'professional' as const }
+  ],
+  node: [
+    { id: 'node-senior', name: 'David Kim', role: 'Backend Engineer', personality: 'technical' as const },
+    { id: 'node-lead', name: 'Lisa Wang', role: 'Engineering Manager', personality: 'professional' as const }
+  ],
+  typescript: [
+    { id: 'ts-expert', name: 'James Wilson', role: 'TypeScript Expert', personality: 'technical' as const },
+    { id: 'ts-mentor', name: 'Anna Foster', role: 'Senior Developer', personality: 'friendly' as const }
+  ],
+  "html-css": [
+    { id: 'ui-designer', name: 'Maya Patel', role: 'UI/UX Engineer', personality: 'creative' as const },
+    { id: 'front-lead', name: 'Tom Anderson', role: 'Frontend Lead', personality: 'professional' as const }
+  ],
+  general: [
+    { id: 'hr-lead', name: 'Jennifer Smith', role: 'HR Manager', personality: 'friendly' as const },
+    { id: 'team-lead', name: 'Robert Brown', role: 'Team Lead', personality: 'professional' as const },
+    { id: 'cto', name: 'Dr. Amanda Lee', role: 'CTO', personality: 'professional' as const }
+  ]
+};
+
 const Interview = () => {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
@@ -177,14 +204,25 @@ const Interview = () => {
   const [isThinking, setIsThinking] = useState(false);
   const [showExitDialog, setShowExitDialog] = useState(false);
   const [showNextDialog, setShowNextDialog] = useState(false);
+  const [isMicOn, setIsMicOn] = useState(true);
+  const [isVolumeOn, setIsVolumeOn] = useState(true);
+  const [currentInterviewers, setCurrentInterviewers] = useState<any[]>([]);
   
   // Get questions based on topic and level
   const questions = questionBank[topic as keyof typeof questionBank]?.[level as keyof typeof questionBank.javascript] || 
-                    questionBank.general.beginner; // Default to general beginner questions
+                    questionBank.general.beginner;
   
-  // Find the selected topic and level objects for display
-  const selectedTopic = interviewTopics.find(t => t.id === topic) || interviewTopics.find(t => t.id === "general")!;
-  const selectedLevel = difficultyLevels.find(l => l.id === level) || difficultyLevels.find(l => l.id === "beginner")!;
+  // Set up interviewers based on topic
+  useEffect(() => {
+    const profiles = interviewerProfiles[topic as keyof typeof interviewerProfiles] || interviewerProfiles.general;
+    const interviewers = profiles.slice(0, level === 'advanced' ? 3 : 2).map((profile, index) => ({
+      ...profile,
+      isActive: index === 0,
+      isSpeaking: index === 0 && isThinking,
+      audioLevel: Math.random() * 0.8 + 0.2
+    }));
+    setCurrentInterviewers(interviewers);
+  }, [topic, level, isThinking]);
 
   // Mock function to simulate AI analysis
   const analyzeResponse = async (question: string, response: string) => {
@@ -192,10 +230,21 @@ const Interview = () => {
     console.log(`Analyzing response for: ${question}`);
     console.log(`Response: ${response}`);
     
+    // Simulate different interviewers speaking
+    setCurrentInterviewers(prev => prev.map((interviewer, index) => ({
+      ...interviewer,
+      isSpeaking: index === Math.floor(Math.random() * prev.length),
+      audioLevel: Math.random() * 0.8 + 0.2
+    })));
+    
     // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 3000));
     
     setIsThinking(false);
+    setCurrentInterviewers(prev => prev.map(interviewer => ({
+      ...interviewer,
+      isSpeaking: false
+    })));
     return true;
   };
   
@@ -205,19 +254,15 @@ const Interview = () => {
   
   const handleNext = async () => {
     if (!transcript.trim()) {
-      // No response recorded
       setShowNextDialog(true);
       return;
     }
     
-    // Process the current response
     await analyzeResponse(questions[currentQuestion], transcript);
     
     if (currentQuestion === questions.length - 1) {
-      // Last question, navigate to results
       navigate(`/results/new?topic=${topic}&level=${level}`);
     } else {
-      // Move to next question
       setCurrentQuestion(currentQuestion + 1);
       setTranscript("");
       setIsListening(false);
@@ -227,82 +272,72 @@ const Interview = () => {
   const handleExit = () => {
     setShowExitDialog(true);
   };
+
+  const handleMicToggle = () => {
+    setIsMicOn(!isMicOn);
+    setIsListening(!isMicOn);
+  };
+
+  const handleVolumeToggle = () => {
+    setIsVolumeOn(!isVolumeOn);
+  };
   
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
-          {/* Topic and Level indicator */}
-          <div className="mb-6 flex flex-wrap items-center justify-between">
-            <div className="flex items-center mb-2 md:mb-0">
-              <span className="text-2xl mr-2">{selectedTopic.icon}</span>
-              <span className="font-medium text-lg">{selectedTopic.name}</span>
-              <span className="mx-2 text-muted-foreground">•</span>
-              <span className="text-muted-foreground">{selectedLevel.name}</span>
-            </div>
+    <div className="min-h-screen bg-slate-900">
+      <InterviewRoom
+        interviewers={currentInterviewers}
+        currentQuestion={questions[currentQuestion]}
+        onMicToggle={handleMicToggle}
+        onVolumeToggle={handleVolumeToggle}
+        isMicOn={isMicOn}
+        isVolumeOn={isVolumeOn}
+        isListening={isListening}
+      />
+
+      {/* Progress bar overlay */}
+      <div className="fixed top-4 left-4 right-4 z-10">
+        <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-4 border border-slate-700">
+          <div className="flex justify-between text-sm mb-2 text-white">
+            <span>Question {currentQuestion + 1} of {questions.length}</span>
+            <span>{Math.round(((currentQuestion + 1) / questions.length) * 100)}% Complete</span>
           </div>
-          
-          {/* Progress bar */}
-          <div className="mb-8">
-            <div className="flex justify-between text-sm mb-2">
-              <span>Question {currentQuestion + 1} of {questions.length}</span>
-              <span>{Math.round(((currentQuestion + 1) / questions.length) * 100)}% Complete</span>
-            </div>
-            <Progress value={((currentQuestion + 1) / questions.length) * 100} className="h-2" />
-          </div>
-          
-          {/* Timer (just UI, not functional in this demo) */}
-          <div className="flex justify-end mb-6">
-            <div className="inline-flex items-center bg-muted rounded-full px-3 py-1 text-sm">
-              <Clock className="h-3 w-3 mr-1" />
-              <span>00:45</span>
-            </div>
-          </div>
-          
-          {/* Question card */}
-          <Card className="mb-8">
-            <CardContent className="pt-6">
-              <h2 className="text-xl font-semibold mb-2">Question:</h2>
-              <p className="text-lg">{questions[currentQuestion]}</p>
-            </CardContent>
-          </Card>
-          
-          {/* Voice recorder */}
-          <div className="mb-8">
-            <VoiceRecorder 
-              onTranscript={handleTranscript}
-              isListening={isListening}
-              onListeningChange={setIsListening}
-            />
-          </div>
-          
-          {/* Action buttons */}
-          <div className="flex justify-between">
-            <Button variant="outline" onClick={handleExit}>
-              Exit Interview
-            </Button>
-            <Button 
-              onClick={handleNext}
-              disabled={isThinking}
-              className="min-w-[120px]"
-            >
-              {isThinking ? (
-                <span className="flex items-center">
-                  Processing
-                  <span className="ml-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></span>
-                </span>
-              ) : (
-                <span className="flex items-center">
-                  Next
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </span>
-              )}
-            </Button>
-          </div>
+          <Progress value={((currentQuestion + 1) / questions.length) * 100} className="h-2" />
         </div>
-      </main>
+      </div>
+
+      {/* Action buttons overlay */}
+      <div className="fixed top-4 right-4 z-10 flex space-x-2">
+        <Button variant="outline" onClick={handleExit} className="bg-slate-800/80 backdrop-blur-sm border-slate-700">
+          <Home className="h-4 w-4 mr-2" />
+          Exit
+        </Button>
+        <Button 
+          onClick={handleNext}
+          disabled={isThinking}
+          className="bg-blue-600 hover:bg-blue-700 min-w-[120px]"
+        >
+          {isThinking ? (
+            <span className="flex items-center">
+              Processing
+              <span className="ml-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></span>
+            </span>
+          ) : (
+            <span className="flex items-center">
+              Next
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </span>
+          )}
+        </Button>
+      </div>
+
+      {/* Hidden voice recorder for transcript capture */}
+      <div className="hidden">
+        <VoiceRecorder 
+          onTranscript={handleTranscript}
+          isListening={isListening && isMicOn}
+          onListeningChange={setIsListening}
+        />
+      </div>
       
       {/* Exit confirmation dialog */}
       <AlertDialog open={showExitDialog} onOpenChange={setShowExitDialog}>

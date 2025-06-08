@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import FormSkeleton from "@/components/skeletons/FormSkeleton";
 import { Mic, Mail } from "lucide-react";
 import { apiCall } from "@/api/apiCalls";
 import { useSelector } from "react-redux";
@@ -15,6 +16,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
   const { toast } = useToast();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const navigate = useNavigate();
