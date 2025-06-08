@@ -8,6 +8,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import Index from "./pages/Index";
+import PreRegister from "./pages/PreRegister";
 import Dashboard from "./pages/Dashboard";
 import Interview from "./pages/Interview";
 import Results from "./pages/Results";
@@ -30,6 +31,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/pre-register" element={<PreRegister />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
