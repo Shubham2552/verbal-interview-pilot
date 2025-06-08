@@ -1,6 +1,5 @@
-
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,45 +7,49 @@ import { useToast } from "@/components/ui/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Mic, Mail } from "lucide-react";
+import { apiCall } from "@/api/apiCalls";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading || isSubmitted) return;
     setIsLoading(true);
 
     try {
-      // Mock API call - in real app this would send to backend
-      const response = await fetch('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      if (response.ok) {
+      const forgotPasswordResponse = await apiCall({
+        method: 'GET',
+        path: '/user/forgot-password',
+        query: { email },
+      })
+      debugger;
+      if (forgotPasswordResponse) {
         setIsSubmitted(true);
         toast({
           title: "Reset link sent",
-          description: "If an account exists with this email, you will receive a password reset link.",
+          description: forgotPasswordResponse.message || "Please check your email for the password reset link.",
         });
-      } else {
-        throw new Error('Failed to send reset email');
       }
     } catch (error) {
-      // Mock success for demo purposes
-      setTimeout(() => {
-        setIsSubmitted(true);
-        toast({
-          title: "Reset link sent",
-          description: "If an account exists with this email, you will receive a password reset link.",
-        });
-      }, 1500);
+      toast({
+        title: "Error",
+        description: error?.response?.data?.message || "There was a problem sending the reset link. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +58,7 @@ const ForgotPassword = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      
+
       <main className="flex-grow flex items-center justify-center bg-gradient-to-b from-primary/10 to-background py-12">
         <div className="w-full max-w-md space-y-8 p-8 bg-white rounded-lg shadow-sm">
           <div className="text-center">
@@ -69,7 +72,7 @@ const ForgotPassword = () => {
               {!isSubmitted ? "Enter your email to receive a password reset link" : "Check your email for the reset link"}
             </p>
           </div>
-          
+
           {!isSubmitted ? (
             <form onSubmit={handleSubmit} className="mt-8 space-y-6">
               <div>
@@ -91,7 +94,7 @@ const ForgotPassword = () => {
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Sending reset link..." : "Send reset link"}
               </Button>
-              
+
               <div className="text-center text-sm">
                 <p className="text-muted-foreground">
                   Remember your password?{" "}
@@ -111,7 +114,7 @@ const ForgotPassword = () => {
                   The link will expire in 1 hour. Check your spam folder if you don't see it.
                 </p>
               </div>
-              
+
               <Link to="/login">
                 <Button variant="outline" className="w-full">
                   Return to login
@@ -121,7 +124,7 @@ const ForgotPassword = () => {
           )}
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

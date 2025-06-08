@@ -8,7 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { logout } from "@/store/AuthSlice";
 import type { RootState } from "@/store"; // Adjust path if needed
 import { useDispatch, useSelector } from "react-redux";
-
+import { apiCall } from "@/api/apiCalls";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -18,14 +18,32 @@ const Header = () => {
   const { toast } = useToast();
 
 
-  const handleLogout = () => {
-    dispatch(logout());
-    toast({
-      title: "Logged out",
-      description: "You have been logged out successfully.",
-    });
-    navigate("/");
-    setIsMobileMenuOpen(false);
+  const handleLogout = async () => {
+    try {
+      const logoutResponse = await apiCall({
+        method: "GET",
+        path: "/user/logout",
+        token: true,
+      });
+      if (logoutResponse) {
+        toast({
+          title: "Logout successful",
+          description: "You have been logged out successfully.",
+        });
+      }
+    } catch (error: any) {
+      console.error("Logout error:", error);
+    } finally {
+      dispatch(logout());
+      toast({
+        title: "Logged out",
+        description: "You have been logged out successfully.",
+      });
+      navigate("/");
+      setIsMobileMenuOpen(false);
+
+    }
+
   };
 
 

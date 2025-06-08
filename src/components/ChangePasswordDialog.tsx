@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Lock, Eye, EyeOff } from "lucide-react";
+import { apiCall } from "@/api/apiCalls";
 
 interface ChangePasswordDialogProps {
   open: boolean;
@@ -44,7 +45,7 @@ const ChangePasswordDialog = ({ open, onOpenChange }: ChangePasswordDialogProps)
     if (newPassword.length < 8) {
       toast({
         title: "Password too short",
-        description: "New password must be at least 8 characters long.",
+        description: "New password must be at least 6 characters long.",
         variant: "destructive"
       });
       return;
@@ -62,44 +63,33 @@ const ChangePasswordDialog = ({ open, onOpenChange }: ChangePasswordDialogProps)
     setIsLoading(true);
 
     try {
-      // Mock API call - in real app this would send to backend
-      const response = await fetch('/api/auth/change-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      await apiCall({
+        method: "POST",
+        path: "/user/change-password",
+        body: {
+          oldPassword: currentPassword,
+          newPassword,
         },
-        body: JSON.stringify({ 
-          currentPassword, 
-          newPassword 
-        }),
+        token: true,
       });
 
-      if (response.ok) {
-        toast({
-          title: "Password changed",
-          description: "Your password has been changed successfully.",
-        });
-        onOpenChange(false);
-        // Reset form
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
-      } else {
-        throw new Error('Failed to change password');
-      }
-    } catch (error) {
-      // Mock success for demo purposes
-      setTimeout(() => {
-        toast({
-          title: "Password changed",
-          description: "Your password has been changed successfully.",
-        });
-        onOpenChange(false);
-        // Reset form
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
-      }, 1500);
+      toast({
+        title: "Password changed",
+        description: "Your password has been changed successfully.",
+      });
+      onOpenChange(false);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      //send user to login again
+      window.location.href = "/login"; // Redirect to login page
+    } catch (error: any) {
+      debugger;
+      toast({
+        title: "Error changing password",
+        description: error.response.data.message || "An error occurred while changing your password.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }

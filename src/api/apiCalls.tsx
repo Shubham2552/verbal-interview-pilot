@@ -51,6 +51,7 @@ export async function apiCall(options: ApiCallOptions): Promise<any> {
     const response = await axios(config);
     return response.data;
   } catch (error: any) {
+    debugger;
     // If unauthorized or token expired, redirect to login
     if (
       error.response &&

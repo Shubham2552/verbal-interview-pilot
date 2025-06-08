@@ -13,10 +13,10 @@ import { login } from "@/store/authSlice"; // <-- Import your Redux login action
 import { apiCall } from "../api/apiCalls"; // Adjust the import based on your project structure
 
 const Signup = () => {
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [gender, setGender] = useState("");
-  const [dateofbirth, setDateOfBirth] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
   const [phone, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,10 +35,10 @@ const Signup = () => {
         method: "POST",
         path: "/user/signup", // Change this to your actual signup endpoint
         body: {
-          firstname,
-          lastname,
+          firstName,
+          lastName,
           gender,
-          dateofbirth,
+          dateOfBirth,
           phone,
           email,
           password,
@@ -101,7 +101,7 @@ const Signup = () => {
                   id="firstName"
                   type="text"
                   placeholder="E.g. John"
-                  value={firstname}
+                  value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   required
                 />
@@ -112,7 +112,7 @@ const Signup = () => {
                   id="lastName"
                   type="text"
                   placeholder="E.g. Doe"
-                  value={lastname}
+                  value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   required
                 />
@@ -133,7 +133,7 @@ const Signup = () => {
                 <Input
                   id="dateOfBirth"
                   type="date"
-                  value={dateofbirth}
+                  value={dateOfBirth}
                   onChange={(e) => setDateOfBirth(e.target.value)}
                   required
                 />
