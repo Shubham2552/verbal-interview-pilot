@@ -1,12 +1,11 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Mic, ArrowRight, CheckCircle, Clock, Target, Users, Zap } from "lucide-react";
+import { Mic, ArrowRight, CheckCircle, Clock, Target, Users, Zap, ArrowDown } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -14,8 +13,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://your-api-domain.com' 
+const BASE_URL = process.env.NODE_ENV === 'production'
+  ? 'https://your-api-domain.com'
   : 'http://localhost:3000';
 
 const benefits = [
@@ -79,7 +78,7 @@ const faqs = [
   },
   {
     question: "When does VerbalPilot launch?",
-    answer: "We're targeting early 2024 for our beta launch. Join our waitlist to be among the first to try VerbalPilot and help shape the product."
+    answer: "We're targeting winter 2025 for our beta launch. Join our waitlist to be among the first to try VerbalPilot and help shape the product."
   },
   {
     question: "Can I suggest features?",
@@ -99,11 +98,12 @@ const PreRegister = () => {
   });
   const [isSurveySubmitting, setIsSurveySubmitting] = useState(false);
   const { toast } = useToast();
+  const surveyRef = useRef<HTMLDivElement>(null);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch(`${BASE_URL}/api/waitlist`, {
         method: 'POST',
@@ -136,7 +136,7 @@ const PreRegister = () => {
   const handleSurveySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSurveySubmitting(true);
-    
+
     try {
       const response = await fetch(`${BASE_URL}/api/survey`, {
         method: 'POST',
@@ -176,55 +176,55 @@ const PreRegister = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const scrollToSurvey = () => {
+    surveyRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-primary/5 to-background py-20 md:py-32">
+      <section className="bg-gradient-to-b from-primary/5 to-background py-20 md:py-32 border-b">
         <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             <div className="flex justify-center mb-8">
               <div className="bg-primary/10 rounded-full p-4">
                 <Mic className="h-12 w-12 text-primary" />
               </div>
             </div>
-            
-            <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6 text-foreground">
+            <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-4 text-foreground">
               Ace Your Interviews with AI
             </h1>
-            <p className="text-2xl md:text-3xl font-medium text-primary mb-8">
-              Practice Like a Pro with VerbalPilot
+            <p className="text-xl text-muted-foreground mb-8">
+              Practice with VerbalPilot and get instant feedback to boost your confidence.
             </p>
-            
-            <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
-              VerbalPilot is your AI-powered mock interview partner. Practice anytime, 
-              get instant feedback, and build confidence before your real interview.
-            </p>
-            
-            <form onSubmit={handleEmailSubmit} className="max-w-md mx-auto mb-8">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Input
-                  type="email"
-                  placeholder="Enter your email for early access"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="flex-1 h-12 text-base"
-                />
-                <Button 
-                  type="submit" 
-                  size="lg" 
-                  className="h-12 px-8 whitespace-nowrap"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Joining..." : "Get Early Access"}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
+            <form onSubmit={handleEmailSubmit} className="max-w-md mx-auto mb-8 flex gap-4">
+              <Input
+                type="email"
+                placeholder="Enter your email for early access"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="flex-1 h-12 text-base"
+              />
+              <Button
+                type="submit"
+                size="lg"
+                className="h-12 px-8 whitespace-nowrap"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Joining..." : "Get Early Access"}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
             </form>
-            
-            <p className="text-sm text-muted-foreground">
-              Join 1,000+ professionals preparing for their dream jobs
-            </p>
+            <Button
+              type="button"
+              size="lg"
+              className="mx-auto mt-2 flex items-center gap-2 rounded-full"
+              onClick={scrollToSurvey}
+            >
+              Personalize your experience
+              <ArrowDown className="ml-2 h-5 w-5" />
+            </Button>
           </div>
         </div>
       </section>
@@ -239,10 +239,10 @@ const PreRegister = () => {
             <p className="text-xl text-muted-foreground text-center mb-16 max-w-2xl mx-auto">
               Everything you need to master your interview skills and land your dream job
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {benefits.map((benefit, index) => (
-                <div key={index} className="flex items-start space-x-4 p-6 bg-background rounded-lg shadow-sm border">
+                <div key={index} className="flex items-start space-x-4 p-6 bg-background rounded-lg shadow border">
                   <div className="bg-primary/10 rounded-full p-3 flex-shrink-0">
                     <benefit.icon className="h-6 w-6 text-primary" />
                   </div>
@@ -271,7 +271,7 @@ const PreRegister = () => {
             <p className="text-xl text-muted-foreground text-center mb-16 max-w-2xl mx-auto">
               Whether you're starting your career or advancing to the next level, VerbalPilot adapts to your needs
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {testimonials.map((testimonial, index) => (
                 <Card key={index} className="border shadow-sm hover:shadow-md transition-shadow">
@@ -296,7 +296,7 @@ const PreRegister = () => {
       </section>
 
       {/* Audience Survey Section */}
-      <section className="py-20 bg-background">
+      <section ref={surveyRef} className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
             <Card className="border shadow-lg">
@@ -377,8 +377,8 @@ const PreRegister = () => {
                     />
                   </div>
 
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="w-full h-12 text-base"
                     disabled={isSurveySubmitting}
                   >
@@ -401,11 +401,11 @@ const PreRegister = () => {
             <p className="text-xl text-muted-foreground text-center mb-12">
               Everything you need to know about VerbalPilot
             </p>
-            
+
             <Accordion type="single" collapsible className="space-y-4">
               {faqs.map((faq, index) => (
-                <AccordionItem 
-                  key={index} 
+                <AccordionItem
+                  key={index}
                   value={`item-${index}`}
                   className="border rounded-lg px-6"
                 >
