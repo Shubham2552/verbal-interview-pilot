@@ -9,7 +9,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Mic } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { login } from "@/store/authSlice"; // <-- Import your Redux login action
+import { login } from "@/store/AuthSlice"; // <-- Import your Redux login action
 import { apiCall } from "../api/apiCalls"; // Adjust the import based on your project structure
 
 const Signup = () => {
