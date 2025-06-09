@@ -197,7 +197,10 @@ const PreRegister = () => {
             <p className="text-xl text-muted-foreground mb-8">
               Practice with VerbalPilot and get instant feedback to boost your confidence.
             </p>
-            <form onSubmit={handleEmailSubmit} className="max-w-md mx-auto mb-8 flex gap-4">
+            <form
+              onSubmit={handleEmailSubmit}
+              className="max-w-md mx-auto mb-8 flex flex-col gap-4 sm:flex-row"
+            >
               <Input
                 type="email"
                 placeholder="Enter your email for early access"
