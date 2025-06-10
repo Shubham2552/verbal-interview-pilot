@@ -12,9 +12,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { apiCall } from "@/api/apiCalls"; // <-- import apiCall
 
 const BASE_URL = process.env.NODE_ENV === 'production'
-  ? 'https://your-api-domain.com'
+  ? 'https://api.verbalpilot.com'
   : 'http://localhost:3000';
 
 const benefits = [
@@ -94,34 +95,30 @@ const PreRegister = () => {
     roles: "",
     jobHunting: "",
     challenges: "",
-    willPay: ""
+    willPay: "",
+    featureSuggestion: "",
   });
   const [isSurveySubmitting, setIsSurveySubmitting] = useState(false);
   const { toast } = useToast();
   const surveyRef = useRef<HTMLDivElement>(null);
 
+  // Updated handleEmailSubmit to use apiCall and send email in query
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${BASE_URL}/api/waitlist`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
+      await apiCall({
+        method: "GET",
+        url: `${BASE_URL}/api/user/waitlist`,
+        query: { email }, // <-- send email in query
       });
 
-      if (response.ok) {
-        toast({
-          title: "Welcome to the waitlist!",
-          description: "We'll notify you when VerbalPilot is ready for early access.",
-        });
-        setEmail("");
-      } else {
-        throw new Error('Failed to submit');
-      }
+      toast({
+        title: "Welcome to the waitlist!",
+        description: "We'll notify you when VerbalPilot is ready for early access.",
+      });
+      setEmail("");
     } catch (error) {
       toast({
         title: "Something went wrong",
@@ -138,29 +135,24 @@ const PreRegister = () => {
     setIsSurveySubmitting(true);
 
     try {
-      const response = await fetch(`${BASE_URL}/api/survey`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      await apiCall({
+        method: "POST",
+        url: `${BASE_URL}/api/user/survey`,
+        body: formData,
       });
 
-      if (response.ok) {
-        toast({
-          title: "Survey submitted!",
-          description: "Thank you for helping us build a better product.",
-        });
-        setFormData({
-          surveyEmail: "",
-          roles: "",
-          jobHunting: "",
-          challenges: "",
-          willPay: ""
-        });
-      } else {
-        throw new Error('Failed to submit survey');
-      }
+      toast({
+        title: "Survey submitted!",
+        description: "Thank you for helping us build a better product.",
+      });
+      setFormData({
+        surveyEmail: "",
+        roles: "",
+        jobHunting: "",
+        challenges: "",
+        willPay: "",
+        featureSuggestion: "",
+      });
     } catch (error) {
       toast({
         title: "Something went wrong",
@@ -377,6 +369,20 @@ const PreRegister = () => {
                       value={formData.willPay}
                       onChange={(e) => handleSurveyChange("willPay", e.target.value)}
                       className="mt-2"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="feature-suggestion" className="text-base font-medium">
+                      Suggest a feature (optional)
+                    </Label>
+                    <Textarea
+                      id="feature-suggestion"
+                      placeholder="e.g., Live interview feedback, question bank, analytics dashboard, etc."
+                      value={formData.featureSuggestion}
+                      onChange={(e) => handleSurveyChange("featureSuggestion", e.target.value)}
+                      className="mt-2"
+                      rows={2}
                     />
                   </div>
 
